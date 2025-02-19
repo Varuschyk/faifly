@@ -28,6 +28,11 @@
             <artifactId>faifly-api-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.task</groupId>
+            <artifactId>swagger-starter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>
