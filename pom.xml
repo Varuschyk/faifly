@@ -18,6 +18,7 @@
         <module>faifly-api-core</module>
         <module>faifly-web-api</module>
         <module>faifly-unit-test</module>
+        <module>swagger-starter</module>
     </modules>
 
     <dependencies>
