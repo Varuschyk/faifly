@@ -7,7 +7,6 @@
         <groupId>com.task</groupId>
         <artifactId>faifly-testtask</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath/>
     </parent>
 
     <artifactId>faifly-app</artifactId>
@@ -27,6 +26,11 @@
         <dependency>
             <groupId>com.task</groupId>
             <artifactId>faifly-api-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.task</groupId>
+            <artifactId>swagger-starter</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
