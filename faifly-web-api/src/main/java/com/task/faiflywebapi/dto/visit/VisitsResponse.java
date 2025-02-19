@@ -10,10 +10,16 @@ import java.util.List;
 @ToString
 @EqualsAndHashCode
 public class VisitsResponse {
-  private final List<VisitResponseDto> visits;
+  private final String firstName;
+  private final String lastName;
+  private final List<VisitRespDto> visits;
   private final int count;
 
-  public VisitsResponse(@Nonnull final List<VisitResponseDto> visits) {
+  public VisitsResponse(@Nonnull final String firstName,
+                        @Nonnull final String lastName,
+                        @Nonnull final List<VisitRespDto> visits) {
+    this.firstName = firstName;
+    this.lastName = lastName;
     this.visits = visits;
     this.count = visits.size();
   }

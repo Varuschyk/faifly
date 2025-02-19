@@ -1,9 +1,10 @@
-package com.task.faiflyapicore.mapper;
+package com.task.faiflyapicore.mapper.visit;
 
 import com.task.faiflyapicore.persistence.enity.VisitEntity;
 import com.task.faiflyapicore.pojo.visit.VisitReadPojo;
 import com.task.faiflyapicore.pojo.visit.VisitWritePojo;
 import com.task.faiflywebapi.dto.visit.VisitRequestDto;
+import com.task.faiflywebapi.dto.visit.VisitRespDto;
 import com.task.faiflywebapi.dto.visit.VisitResponseDto;
 import jakarta.annotation.Nonnull;
 import org.mapstruct.Mapper;
@@ -25,4 +26,6 @@ public interface VisitMapper {
   VisitEntity toVisitEntity(@Nonnull VisitWritePojo visitWritePojo);
 
   VisitResponseDto toVisitResponseDto(@Nonnull VisitReadPojo visitReadPojo);
+
+  VisitRespDto toVisitRespDto(@Nonnull VisitReadPojo visitReadPojo);
 }

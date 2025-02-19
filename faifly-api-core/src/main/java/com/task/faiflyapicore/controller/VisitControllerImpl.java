@@ -1,6 +1,7 @@
 package com.task.faiflyapicore.controller;
 
-import com.task.faiflyapicore.mapper.VisitMapper;
+import com.task.faiflyapicore.mapper.visit.VisitMapper;
+import com.task.faiflyapicore.service.PatientService;
 import com.task.faiflyapicore.service.VisitService;
 import com.task.faiflywebapi.controller.VisitController;
 import com.task.faiflywebapi.dto.visit.VisitRequestDto;
@@ -23,16 +24,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class VisitControllerImpl implements VisitController {
 
   private final VisitService visitService;
+  private final PatientService patientService;
   private final VisitMapper visitMapper;
 
   @Override
   @GetMapping("/v1/visit/{id}")
   public ResponseEntity<VisitsResponse> getVisits(
       @PathVariable("id") @NotNull final Long patientId) {
+    final var patient = patientService.get(patientId);
     final var visitsReadPojo = visitService.getVisits(patientId);
     final var visitsResponseDto = visitsReadPojo.stream()
-        .map(visitMapper::toVisitResponseDto).toList();
-    return ResponseEntity.ok(new VisitsResponse(visitsResponseDto));
+        .map(visitMapper::toVisitRespDto).toList();
+    return ResponseEntity.ok(new VisitsResponse(
+        patient.getFirstName(), patient.getLastName(), visitsResponseDto));
   }
 
   @Override

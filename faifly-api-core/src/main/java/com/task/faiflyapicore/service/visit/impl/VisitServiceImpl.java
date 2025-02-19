@@ -1,6 +1,6 @@
-package com.task.faiflyapicore.service.impl;
+package com.task.faiflyapicore.service.visit.impl;
 
-import com.task.faiflyapicore.mapper.VisitMapper;
+import com.task.faiflyapicore.mapper.visit.VisitMapper;
 import com.task.faiflyapicore.persistence.repository.DoctorRepository;
 import com.task.faiflyapicore.persistence.repository.PatientRepository;
 import com.task.faiflyapicore.persistence.repository.VisitRepository;
@@ -11,8 +11,6 @@ import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -39,8 +37,7 @@ public class VisitServiceImpl implements VisitService {
     visitToSave.setDoctor(doctor);
     final var patient = patientService.findById(visitWritePojo.getPatientId())
         .orElseThrow(() -> new RuntimeException("Patient doesn't exists!"));
-    visitToSave.setEndDateTime(visitWritePojo.getStartDateTime()
-        .plus(30, ChronoUnit.MINUTES));
+    visitToSave.setEndDateTime(visitWritePojo.getEndDateTime());
     visitToSave.setPatient(patient);
     final var savedVisit = visitRepository.save(visitToSave);
     return visitMapper.toVisitReadPojo(savedVisit);
