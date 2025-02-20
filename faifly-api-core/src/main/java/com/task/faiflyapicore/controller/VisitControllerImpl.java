@@ -1,7 +1,7 @@
 package com.task.faiflyapicore.controller;
 
 import com.task.faiflyapicore.mapper.visit.VisitMapper;
-import com.task.faiflyapicore.service.PatientService;
+import com.task.faiflyapicore.pojo.visit.VisitReadPojo;
 import com.task.faiflyapicore.service.VisitService;
 import com.task.faiflywebapi.controller.VisitController;
 import com.task.faiflywebapi.dto.visit.VisitRequestDto;
@@ -14,9 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import java.util.Set;
 
 @Validated
 @RestController
@@ -24,19 +25,29 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class VisitControllerImpl implements VisitController {
 
   private final VisitService visitService;
-  private final PatientService patientService;
   private final VisitMapper visitMapper;
 
   @Override
-  @GetMapping("/v1/visit/{id}")
-  public ResponseEntity<VisitsResponse> getVisits(
-      @PathVariable("id") @NotNull final Long patientId) {
-    final var patient = patientService.get(patientId);
-    final var visitsReadPojo = visitService.getVisits(patientId);
+  @GetMapping(value = "/v1/visit", params = {"search", "doctorIds"})
+  public ResponseEntity<VisitsResponse> getVisits(@RequestParam(value = "page",
+                                                      defaultValue = "0", required = false)
+                                                  final int page,
+                                                  @RequestParam(value = "size",
+                                                      defaultValue = "5", required = false)
+                                                  final int size,
+                                                  @RequestParam(value = "search")
+                                                  final String search,
+                                                  @RequestParam("doctorIds")
+                                                  final Set<Long> doctorIds) {
+    final var visitsReadPojo = visitService.getVisits(page, size, search, doctorIds);
+    final var patient = visitsReadPojo.stream()
+        .map(VisitReadPojo::getPatient).findFirst()
+        .orElseThrow(() -> new RuntimeException("Patient not found"));
+    final var firstName = patient.getFirstName();
+    final var lastName = patient.getLastName();
     final var visitsResponseDto = visitsReadPojo.stream()
         .map(visitMapper::toVisitRespDto).toList();
-    return ResponseEntity.ok(new VisitsResponse(
-        patient.getFirstName(), patient.getLastName(), visitsResponseDto));
+    return ResponseEntity.ok(new VisitsResponse(firstName, lastName, visitsResponseDto));
   }
 
   @Override
