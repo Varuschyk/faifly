@@ -1,5 +1,7 @@
 package com.task.faiflyapicore.pojo.visit;
 
+import com.task.faiflyapicore.pojo.doctor.DoctorReadPojo;
+import com.task.faiflyapicore.pojo.patient.PatientReadPojo;
 import lombok.Getter;
 import lombok.Builder;
 import lombok.ToString;
@@ -14,8 +16,8 @@ import java.time.Instant;
 @EqualsAndHashCode
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class VisitReadPojo {
-  String patientId;
-  String doctorId;
+  PatientReadPojo patient;
+  DoctorReadPojo doctor;
   Instant startDateTime;
   Instant endDateTime;
 }

@@ -14,8 +14,8 @@ import java.time.Instant;
 @EqualsAndHashCode
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class VisitWritePojo {
-  Instant startDateTime;
-  Instant endDateTime;
   Long patientId;
   Long doctorId;
+  Instant startDateTime;
+  Instant endDateTime;
 }

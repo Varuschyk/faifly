@@ -1,4 +1,4 @@
-package com.task.faiflywebapi.dto.doctor;
+package com.task.faiflywebapi.dto.patient;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Jacksonized
 @JsonInclude
-public class DoctorResponseDto {
-	String firstName;
-	String lastName;
+public class PatientResponseDto {
+  String firstName;
+  String lastName;
 }

@@ -9,7 +9,8 @@ import lombok.extern.jackson.Jacksonized;
 @Builder
 @Jacksonized
 @JsonInclude
-public class DoctorResponseDto {
-	String firstName;
-	String lastName;
+public class DoctorMetaDataResponseDto {
+  String firstName;
+  String lastName;
+  Integer totalPatients;
 }

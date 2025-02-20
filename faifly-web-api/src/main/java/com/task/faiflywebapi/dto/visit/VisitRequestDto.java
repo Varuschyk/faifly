@@ -16,4 +16,5 @@ public class VisitRequestDto {
   @NotBlank String patientId;
   @NotBlank String doctorId;
   @NotNull Instant startDateTime;
+  @NotNull Instant endDateTime;
 }

@@ -1,6 +1,7 @@
 package com.task.faiflywebapi.dto.visit;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.task.faiflywebapi.dto.doctor.DoctorMetaDataResponseDto;
 import com.task.faiflywebapi.dto.doctor.DoctorResponseDto;
 import lombok.Builder;
 import lombok.Value;
@@ -13,7 +14,7 @@ import java.time.Instant;
 @Jacksonized
 @JsonInclude
 public class VisitRespDto {
-	DoctorResponseDto doctor;
+	DoctorMetaDataResponseDto doctor;
 	Instant startDateTime;
 	Instant endDateTime;
 }
