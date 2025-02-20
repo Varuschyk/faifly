@@ -1,5 +1,6 @@
 package com.task.faiflywebapi.dto.visit;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.annotation.Nonnull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -10,7 +11,9 @@ import java.util.List;
 @ToString
 @EqualsAndHashCode
 public class VisitsResponse {
+  @JsonInclude(JsonInclude.Include.NON_NULL)
   private final String firstName;
+  @JsonInclude(JsonInclude.Include.NON_NULL)
   private final String lastName;
   private final List<VisitRespDto> visits;
   private final int count;

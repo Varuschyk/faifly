@@ -42,9 +42,9 @@ public class VisitControllerImpl implements VisitController {
     final var visitsReadPojo = visitService.getVisits(page, size, search, doctorIds);
     final var patient = visitsReadPojo.stream()
         .map(VisitReadPojo::getPatient).findFirst()
-        .orElseThrow(() -> new RuntimeException("Patient not found"));
-    final var firstName = patient.getFirstName();
-    final var lastName = patient.getLastName();
+        .orElse(null);
+    final var firstName = patient == null ? null : patient.getFirstName();
+    final var lastName = patient == null ? null : patient.getLastName();
     final var visitsResponseDto = visitsReadPojo.stream()
         .map(visitMapper::toVisitRespDto).toList();
     return ResponseEntity.ok(new VisitsResponse(firstName, lastName, visitsResponseDto));
