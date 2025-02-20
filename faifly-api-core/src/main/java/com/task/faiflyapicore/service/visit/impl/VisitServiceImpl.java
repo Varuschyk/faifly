@@ -9,9 +9,13 @@ import com.task.faiflyapicore.pojo.visit.VisitWritePojo;
 import com.task.faiflyapicore.service.VisitService;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.time.Instant;
 import java.util.List;
+import java.util.Set;
+import java.util.TimeZone;
 
 @Service
 @RequiredArgsConstructor
@@ -23,23 +27,50 @@ public class VisitServiceImpl implements VisitService {
   private final PatientRepository patientService;
 
   @Override
-  public List<VisitReadPojo> getVisits(@Nonnull final Long patientId) {
-    final var visits = visitRepository.findAllByPatientId(patientId);
-    return visits.stream().map(visitMapper::toVisitReadPojo).toList();
+  @Transactional(readOnly = true)
+  public List<VisitReadPojo> getVisits(final int page, final int size,
+                                       @Nonnull final String patientFirstName,
+                                       @Nonnull final Set<Long> doctorIds) {
+    final var visits = visitRepository
+        .findAllByPatientFirstNameAndDoctorIdIn(patientFirstName, doctorIds, PageRequest.of(page, size)).get();
+    return visits.map(visitMapper::toVisitReadPojo).toList();
   }
 
   @Override
   @Transactional
   public VisitReadPojo createVisit(@Nonnull final VisitWritePojo visitWritePojo) {
-    final var visitToSave = visitMapper.toVisitEntity(visitWritePojo);
-    final var doctor = doctorService.findById(visitWritePojo.getDoctorId())
+    final var doctorId = visitWritePojo.getDoctorId();
+    final var doctor = doctorService.findById(doctorId)
         .orElseThrow(() -> new RuntimeException("Doctor doesn't exists!"));
-    visitToSave.setDoctor(doctor);
     final var patient = patientService.findById(visitWritePojo.getPatientId())
         .orElseThrow(() -> new RuntimeException("Patient doesn't exists!"));
-    visitToSave.setEndDateTime(visitWritePojo.getEndDateTime());
+
+    final var startDateTime =
+        getInstantAccordingTimeZone(visitWritePojo.getStartDateTime(), doctor.getTimeZone());
+    final var endDateTime =
+        getInstantAccordingTimeZone(visitWritePojo.getEndDateTime(), doctor.getTimeZone());
+
+    final var doesDoctorHasVisitOnCurrentDateTime = visitRepository
+        .existsByDoctorIdAndStartDateTimeGreaterThanEqualAndEndDateTimeLessThanEqual(doctorId, startDateTime, endDateTime);
+
+    if (doesDoctorHasVisitOnCurrentDateTime) {
+      throw new RuntimeException("Doctor already has visit on current time!");
+    }
+
+    final var visitToSave = visitMapper.toVisitEntity(visitWritePojo);
+
+    visitToSave.setDoctor(doctor);
     visitToSave.setPatient(patient);
+    visitToSave.setStartDateTime(startDateTime);
+    visitToSave.setEndDateTime(endDateTime);
+
     final var savedVisit = visitRepository.save(visitToSave);
     return visitMapper.toVisitReadPojo(savedVisit);
+  }
+
+  @Nonnull
+  private Instant getInstantAccordingTimeZone(@Nonnull final Instant date,
+                                              @Nonnull final TimeZone timeZone) {
+    return date.atZone(timeZone.toZoneId()).toInstant();
   }
 }
