@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Column;
+import jakarta.persistence.Index;
 import jakarta.persistence.GenerationType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -14,11 +15,12 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-
 import java.util.TimeZone;
 
 @Entity
-@Table(name = "doctors")
+@Table(name = "doctors", indexes = {
+    @Index(name = "idx_doctor_lastname_firstname", columnList = "last_name, first_name")
+})
 @Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
