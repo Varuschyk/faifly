@@ -1,5 +1,8 @@
 package com.task.faiflyapicore.service.visit.impl;
 
+import com.task.faiflyapicore.exception.doctor.DoctorNotFoundException;
+import com.task.faiflyapicore.exception.patient.PatientNotFoundException;
+import com.task.faiflyapicore.exception.visit.VisitBadRequestException;
 import com.task.faiflyapicore.mapper.visit.VisitMapper;
 import com.task.faiflyapicore.persistence.repository.DoctorRepository;
 import com.task.faiflyapicore.persistence.repository.PatientRepository;
@@ -41,9 +44,9 @@ public class VisitServiceImpl implements VisitService {
   public VisitReadPojo createVisit(@Nonnull final VisitWritePojo visitWritePojo) {
     final var doctorId = visitWritePojo.getDoctorId();
     final var doctor = doctorService.findById(doctorId)
-        .orElseThrow(() -> new RuntimeException("Doctor doesn't exists!"));
+        .orElseThrow(() -> new DoctorNotFoundException("Doctor doesn't exists!"));
     final var patient = patientService.findById(visitWritePojo.getPatientId())
-        .orElseThrow(() -> new RuntimeException("Patient doesn't exists!"));
+        .orElseThrow(() -> new PatientNotFoundException("Patient doesn't exists!"));
 
     final var startDateTime =
         getInstantAccordingTimeZone(visitWritePojo.getStartDateTime(), doctor.getTimeZone());
@@ -54,7 +57,7 @@ public class VisitServiceImpl implements VisitService {
         .existsByDoctorIdAndStartDateTimeGreaterThanEqualAndEndDateTimeLessThanEqual(doctorId, startDateTime, endDateTime);
 
     if (doesDoctorHasVisitOnCurrentDateTime) {
-      throw new RuntimeException("Doctor already has visit on current time!");
+      throw new VisitBadRequestException("Doctor already has visit on current time!");
     }
 
     final var visitToSave = visitMapper.toVisitEntity(visitWritePojo);

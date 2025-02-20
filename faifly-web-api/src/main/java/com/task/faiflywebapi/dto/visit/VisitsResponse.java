@@ -2,6 +2,7 @@ package com.task.faiflywebapi.dto.visit;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -18,8 +19,8 @@ public class VisitsResponse {
   private final List<VisitRespDto> visits;
   private final int count;
 
-  public VisitsResponse(@Nonnull final String firstName,
-                        @Nonnull final String lastName,
+  public VisitsResponse(@Nullable final String firstName,
+                        @Nullable final String lastName,
                         @Nonnull final List<VisitRespDto> visits) {
     this.firstName = firstName;
     this.lastName = lastName;
