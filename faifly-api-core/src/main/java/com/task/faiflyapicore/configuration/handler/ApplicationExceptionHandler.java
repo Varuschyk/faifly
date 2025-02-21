@@ -35,7 +35,7 @@ public class ApplicationExceptionHandler {
 	@ResponseBody
 	@ExceptionHandler({BadRequestException.class})
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
-	public ErrorResponseDto handleDuplicateException(
+	public ErrorResponseDto handleBadRequestException(
 			@NonNull final HttpServletRequest request,
 			@NonNull final Exception exception) {
 		final var correlationId = UUID.randomUUID();
