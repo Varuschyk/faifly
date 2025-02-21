@@ -26,8 +26,8 @@ public class VisitServiceImpl implements VisitService {
 
   private final VisitRepository visitRepository;
   private final VisitMapper visitMapper;
-  private final DoctorRepository doctorService;
-  private final PatientRepository patientService;
+  private final DoctorRepository doctorRepository;
+  private final PatientRepository patientRepository;
 
   @Override
   @Transactional(readOnly = true)
@@ -43,9 +43,9 @@ public class VisitServiceImpl implements VisitService {
   @Transactional
   public VisitReadPojo createVisit(@Nonnull final VisitWritePojo visitWritePojo) {
     final var doctorId = visitWritePojo.getDoctorId();
-    final var doctor = doctorService.findById(doctorId)
+    final var doctor = doctorRepository.findById(doctorId)
         .orElseThrow(() -> new DoctorNotFoundException("Doctor doesn't exists!"));
-    final var patient = patientService.findById(visitWritePojo.getPatientId())
+    final var patient = patientRepository.findById(visitWritePojo.getPatientId())
         .orElseThrow(() -> new PatientNotFoundException("Patient doesn't exists!"));
 
     final var startDateTime =
